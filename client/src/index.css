@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --primary: #0891B2;
+  --primary-foreground: #ffffff;
+  --sidebar-primary: #0891B2;
+  --sidebar-primary-foreground: #ffffff;
+  --chart-1: #0891B2;
+  --chart-2: #22C55E;
+  --chart-3: #FBBF24;
+  --chart-4: #EF4444;
+  --chart-5: #06B6D4;
+  --radius: 0px;
+  --background: #f5f1e8;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --secondary: #22C55E;
+  --secondary-foreground: #1a1a1a;
+  --muted: #e5e5e5;
+  --muted-foreground: #666666;
+  --accent: #FBBF24;
+  --accent-foreground: #1a1a1a;
+  --destructive: #EF4444;
+  --destructive-foreground: #ffffff;
+  --border: #1a1a1a;
+  --input: #ffffff;
+  --ring: #0891B2;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-accent: #FBBF24;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #1a1a1a;
+  --sidebar-ring: #0891B2;
+}
+
+.dark {
+  --primary: #0891B2;
+  --primary-foreground: #ffffff;
+  --sidebar-primary: #0891B2;
+  --sidebar-primary-foreground: #ffffff;
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --card: #2a2a2a;
+  --card-foreground: #ffffff;
+  --popover: #2a2a2a;
+  --popover-foreground: #ffffff;
+  --secondary: #22C55E;
+  --secondary-foreground: #ffffff;
+  --muted: #3a3a3a;
+  --muted-foreground: #999999;
+  --accent: #FBBF24;
+  --accent-foreground: #1a1a1a;
+  --destructive: #EF4444;
+  --destructive-foreground: #ffffff;
+  --border: #ffffff;
+  --input: #2a2a2a;
+  --ring: #0891B2;
+  --chart-1: #0891B2;
+  --chart-2: #22C55E;
+  --chart-3: #FBBF24;
+  --chart-4: #EF4444;
+  --chart-5: #06B6D4;
+  --sidebar: #2a2a2a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-accent: #FBBF24;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #ffffff;
+  --sidebar-ring: #0891B2;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Press Start 2P', cursive, system-ui, -apple-system, sans-serif;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  /* Arcade/Retro Button Styles */
+  .arcade-button {
+    @apply px-4 py-2 border-4 border-foreground font-bold text-sm uppercase;
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+    transition: all 0.1s;
+  }
+
+  .arcade-button:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  .arcade-button:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  .arcade-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  .arcade-button:disabled:hover {
+    transform: none;
+  }
+
+  .arcade-button.secondary {
+    background-color: var(--secondary);
+    color: white;
+  }
+
+  .arcade-button.accent {
+    background-color: var(--accent);
+    color: #1a1a1a;
+  }
+
+  .arcade-button.destructive {
+    background-color: var(--destructive);
+    color: white;
+  }
+
+  /* Arcade Card Styles */
+  .arcade-card {
+    @apply border-4 border-foreground p-4 bg-card;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+  }
+
+  /* XP Badge */
+  .xp-badge {
+    @apply inline-block px-3 py-1 bg-accent border-2 border-foreground font-bold text-xs uppercase;
+    color: #1a1a1a;
+  }
+
+  /* Level Badge */
+  .level-badge {
+    @apply inline-block px-2 py-1 bg-primary border-2 border-foreground font-bold text-xs uppercase;
+    color: white;
+  }
+
+  /* Progress Bar */
+  .progress-bar {
+    @apply h-4 border-2 border-foreground bg-muted overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply h-full transition-all duration-300;
+  }
+
+  .progress-bar-fill.primary {
+    background-color: var(--primary);
+  }
+
+  .progress-bar-fill.secondary {
+    background-color: var(--secondary);
+  }
+
+  .progress-bar-fill.accent {
+    background-color: var(--accent);
+  }
+
+  .progress-bar-fill.destructive {
+    background-color: var(--destructive);
+  }
+
+  /* Pixel Art */
+  .pixel-art {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 1280px;
+    }
+  }
+}
