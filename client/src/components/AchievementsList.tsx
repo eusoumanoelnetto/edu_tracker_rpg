@@ -2,13 +2,26 @@ import { trpc } from "@/lib/trpc";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function AchievementsList() {
+interface Achievement {
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+}
+
+interface AchievementsListProps {
+  achievements?: Achievement[];
+  isDemoMode?: boolean;
+}
+
+export function AchievementsList({ achievements: propAchievements, isDemoMode }: AchievementsListProps) {
   const { data: achievements, isLoading, error } = trpc.achievements.list.useQuery(undefined, {
+    enabled: !isDemoMode,
     staleTime: 10 * 60 * 1000, // 10 minutos para achievements (mudam menos)
     retry: 1,
   });
 
-  if (isLoading) {
+  if (isLoading && !isDemoMode) {
     return (
       <div className="arcade-card">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -24,31 +37,34 @@ export function AchievementsList() {
     );
   }
 
+  const currentAchievements = isDemoMode ? propAchievements : achievements;
+  const unlockedAchievements = currentAchievements?.filter(a => isDemoMode ? a.unlocked : a.unlockedAt) || [];
+
   return (
     <div className="arcade-card">
-      {achievements && achievements.length > 0 ? (
+      {unlockedAchievements && unlockedAchievements.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {achievements.map((achievement) => (
+          {unlockedAchievements.map((achievement, index) => (
             <div
-              key={achievement.id}
-              className="arcade-card bg-muted text-center hover:bg-accent transition-colors"
+              key={isDemoMode ? index : achievement.id}
+              className="arcade-card bg-muted text-center hover:bg-accent transition-colors p-3"
             >
-              <img
-                src={achievement.icon || "/badge-achievement.png"}
-                alt={achievement.title}
-                className="w-12 h-12 mx-auto mb-2 pixel-art"
-              />
+              <div className="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-2xl">
+                {isDemoMode ? achievement.icon : achievement.icon || "🏆"}
+              </div>
               <p className="text-xs font-bold text-foreground mb-1 uppercase">
-                {achievement.title}
+                {isDemoMode ? achievement.name : achievement.title}
               </p>
               {achievement.description && (
                 <p className="text-xs text-muted-foreground">
                   {achievement.description}
                 </p>
               )}
-              <p className="text-xs text-muted-foreground mt-2">
-                {new Date(achievement.unlockedAt).toLocaleDateString("pt-BR")}
-              </p>
+              {!isDemoMode && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  {new Date(achievement.unlockedAt).toLocaleDateString("pt-BR")}
+                </p>
+              )}
             </div>
           ))}
         </div>

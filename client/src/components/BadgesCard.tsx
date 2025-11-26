@@ -1,10 +1,24 @@
 import { trpc } from "@/lib/trpc";
 import { Loader2 } from "lucide-react";
 
-export function BadgesCard() {
-  const { data: achievements, isLoading } = trpc.achievements.list.useQuery();
+interface Achievement {
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+}
 
-  if (isLoading) {
+interface BadgesCardProps {
+  achievements?: Achievement[];
+  isDemoMode?: boolean;
+}
+
+export function BadgesCard({ achievements: propAchievements, isDemoMode }: BadgesCardProps) {
+  const { data: achievements, isLoading } = trpc.achievements.list.useQuery(undefined, {
+    enabled: !isDemoMode
+  });
+
+  if (isLoading && !isDemoMode) {
     return (
       <div className="arcade-card p-4 flex items-center justify-center min-h-[200px]">
         <Loader2 className="animate-spin text-muted-foreground" size={24} />
@@ -12,8 +26,9 @@ export function BadgesCard() {
     );
   }
 
-  const unlockedBadges = achievements?.filter(a => a.unlockedAt) || [];
-  const totalBadges = 10; // Total de selos disponíveis
+  const currentAchievements = isDemoMode ? propAchievements : achievements;
+  const unlockedBadges = currentAchievements?.filter(a => isDemoMode ? a.unlocked : a.unlockedAt) || [];
+  const totalBadges = currentAchievements?.length || 10;
 
   return (
     <div className="arcade-card p-3 sm:p-4">
@@ -26,9 +41,8 @@ export function BadgesCard() {
 
       {/* Grid de Selos */}
       <div className="grid grid-cols-5 gap-2">
-        {[...Array(totalBadges)].map((_, index) => {
-          const badge = unlockedBadges[index];
-          const isUnlocked = badge !== undefined;
+        {currentAchievements?.map((achievement, index) => {
+          const isUnlocked = isDemoMode ? achievement.unlocked : achievement.unlockedAt;
 
           return (
             <div
@@ -37,12 +51,12 @@ export function BadgesCard() {
                 aspect-square arcade-card p-1 flex items-center justify-center
                 ${isUnlocked ? 'bg-accent/20' : 'bg-muted opacity-50'}
               `}
-              title={badge?.title || 'Selo bloqueado'}
+              title={isUnlocked ? `${achievement.name}: ${achievement.description}` : 'Selo bloqueado'}
             >
               {isUnlocked ? (
-                <span className="text-2xl">🏆</span>
+                <span className="text-lg">{achievement.icon}</span>
               ) : (
-                <span className="text-2xl opacity-30">🔒</span>
+                <span className="text-lg opacity-30">🔒</span>
               )}
             </div>
           );

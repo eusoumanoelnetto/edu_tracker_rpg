@@ -46,12 +46,42 @@ queryClient.getMutationCache().subscribe(event => {
   }
 });
 
+// Detecta se está rodando no GitHub Pages (sem servidor backend)
+const isStaticDeployment = window.location.hostname.includes('github.io') || 
+                          window.location.hostname.includes('pages.dev') ||
+                          window.location.pathname.includes('/rpg_edu_tracker/');
+
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: "/api/trpc",
+      url: isStaticDeployment ? "/__mock_api__" : "/api/trpc",
       transformer: superjson,
       fetch(input, init) {
+        // Para deployment estático, simular API com dados mock
+        if (isStaticDeployment) {
+          return Promise.resolve(new Response(JSON.stringify({
+            success: true,
+            data: {
+              user: {
+                id: "demo-user",
+                name: "Demo User",
+                email: "demo@example.com",
+                avatar: "boy-1",
+                openId: "demo-openid"
+              },
+              courses: [],
+              achievements: [
+                { name: "Primeiro Login", description: "Bem-vindo ao RPG Edu Tracker!", icon: "🎉", unlocked: true },
+                { name: "Explorador", description: "Explorou todas as funcionalidades", icon: "🗺️", unlocked: true },
+                { name: "Estudante Dedicado", description: "Completou primeiro curso", icon: "📚", unlocked: false }
+              ]
+            }
+          }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          }));
+        }
+
         // Get token from localStorage (for VS Code Simple Browser compatibility)
         const token = localStorage.getItem('app_session_id');
         const headers = {

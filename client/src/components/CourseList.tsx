@@ -6,8 +6,14 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function CourseList() {
+interface CourseListProps {
+  courses?: any[];
+  isDemoMode?: boolean;
+}
+
+export function CourseList({ courses: propCourses, isDemoMode }: CourseListProps) {
   const { data: courses, isLoading, error } = trpc.courses.list.useQuery(undefined, {
+    enabled: !isDemoMode,
     staleTime: 2 * 60 * 1000, // 2 minutos para dados mais dinâmicos
     retry: 1,
   });
@@ -22,7 +28,13 @@ export function CourseList() {
   const [completedCourse, setCompletedCourse] = useState<any | null>(null);
 
   const handleUpdateProgress = async (courseId: number, newProgress: number) => {
-    const course = courses?.find((c) => c.id === courseId);
+    if (isDemoMode) {
+      toast.success("Modo demo - funcionalidade limitada");
+      return;
+    }
+
+    const currentCourses = isDemoMode ? propCourses : courses;
+    const course = currentCourses?.find((c) => c.id === courseId);
     if (!course) return;
 
     if (newProgress < 0 || newProgress > course.totalHours) {
@@ -51,14 +63,20 @@ export function CourseList() {
   };
 
   const handleAddHour = async (courseId: number) => {
-    const course = courses?.find((c) => c.id === courseId);
+    if (isDemoMode) {
+      toast.success("Modo demo - funcionalidade limitada");
+      return;
+    }
+
+    const currentCourses = isDemoMode ? propCourses : courses;
+    const course = currentCourses?.find((c) => c.id === courseId);
     if (!course) return;
 
     const newProgress = Math.min(course.completedHours + 1, course.totalHours);
     await handleUpdateProgress(courseId, newProgress);
   };
 
-  if (isLoading) {
+  if (isLoading && !isDemoMode) {
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
@@ -80,9 +98,11 @@ export function CourseList() {
     );
   }
 
+  const currentCourses = isDemoMode ? propCourses : courses;
+
   return (
     <div className="space-y-3 sm:space-y-4">
-      {courses?.map((course) => {
+      {currentCourses?.map((course) => {
         const progress = (course.completedHours / course.totalHours) * 100;
         const isCompleted = course.status === "completed";
 
@@ -215,7 +235,7 @@ export function CourseList() {
         );
       })}
 
-      {!courses || (courses.length === 0 && (
+      {!currentCourses || (currentCourses.length === 0 && (
         <div className="text-center py-6 sm:py-8 text-muted-foreground arcade-card">
           <p className="text-xs sm:text-sm uppercase font-bold">Nenhum curso registrado</p>
           <p className="text-xs">Comece adicionando seu primeiro curso!</p>

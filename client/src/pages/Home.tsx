@@ -6,16 +6,24 @@ import { AchievementsList } from "@/components/AchievementsList";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useDemoData } from "@/contexts/DemoContext";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Home() {
   const { user, loading, isAuthenticated, logout } = useAuth();
+  const { isDemoMode, demoUser, demoCourses, demoAchievements } = useDemoData();
   
-  // Pré-carregar dados em paralelo
-  const coursesQuery = trpc.courses.list.useQuery(undefined, { enabled: isAuthenticated });
-  const achievementsQuery = trpc.achievements.list.useQuery(undefined, { enabled: isAuthenticated });
+  // Pré-carregar dados em paralelo (apenas em produção com servidor)
+  const coursesQuery = trpc.courses.list.useQuery(undefined, { enabled: isAuthenticated && !isDemoMode });
+  const achievementsQuery = trpc.achievements.list.useQuery(undefined, { enabled: isAuthenticated && !isDemoMode });
+  
+  // Usar dados demo se estiver em modo demo
+  const currentUser = isDemoMode ? demoUser : user;
+  const courses = isDemoMode ? demoCourses : (coursesQuery.data || []);
+  const achievements = isDemoMode ? demoAchievements : (achievementsQuery.data || []);
+  
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -161,10 +169,10 @@ export default function Home() {
           {/* Character HUD - Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             <CharacterHUD 
-              characterName={user?.name || "Aventureiro"} 
-              avatar={user?.avatar}
+              characterName={currentUser?.name || "Aventureiro"} 
+              avatar={currentUser?.avatar}
             />
-            <BadgesCard />
+            <BadgesCard achievements={achievements} isDemoMode={isDemoMode} />
           </div>
 
           {/* Courses Section - Main */}
@@ -281,7 +289,7 @@ export default function Home() {
             )}
 
             {/* Courses List */}
-            <CourseList />
+            <CourseList courses={courses} isDemoMode={isDemoMode} />
           </div>
         </div>
 
@@ -290,7 +298,7 @@ export default function Home() {
           <h2 className="text-xl sm:text-2xl font-bold text-foreground uppercase mb-6">
             Conquistas
           </h2>
-          <AchievementsList />
+          <AchievementsList achievements={achievements} isDemoMode={isDemoMode} />
         </div>
 
         {/* Footer */}
