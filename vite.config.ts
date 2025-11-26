@@ -11,6 +11,10 @@ const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(
 
 export default defineConfig({
   plugins,
+  // Base path para produção no GitHub Pages
+  // Quando a variável de ambiente GITHUB_PAGES estiver definida (no workflow),
+  // usamos o nome do repositório como base. Em dev permanece "/".
+  base: process.env.GITHUB_PAGES ? "/rpg_edu_tracker/" : "/",
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),

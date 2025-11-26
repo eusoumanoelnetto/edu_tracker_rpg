@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>RPG Edu Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- SPA fallback para GitHub Pages: preserva path e redireciona para index -->
+    <script>
+      (function() {
+        var l = window.location;
+        // Caminho base do repo no GitHub Pages
+        var base = '/rpg_edu_tracker/';
+        if (!l.pathname.startsWith(base)) {
+          base = '/';
+        }
+        // Mantém a rota SPA em query param p
+        l.replace(base + '?p=' + encodeURIComponent(l.pathname + l.search + l.hash));
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>Redirecionando...</noscript>
+  </body>
+</html>

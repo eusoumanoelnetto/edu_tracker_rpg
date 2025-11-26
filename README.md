@@ -74,6 +74,9 @@ patches/
 - Design responsivo e acessível
 - Estratégias de fallback para ambientes de desenvolvimento
 
+## 🔗 Demo (GitHub Pages)
+- Acesse: https://eusoumanoelnetto.github.io/rpg_edu_tracker/
+
 ## 👨‍💻 Como rodar o projeto
 1. Instale as dependências:
    ```sh
