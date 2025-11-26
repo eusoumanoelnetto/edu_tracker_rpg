@@ -54,7 +54,7 @@ const isStaticDeployment = window.location.hostname.includes('github.io') ||
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: isStaticDeployment ? "/__mock_api__" : "/api/trpc",
+      url: "/api/trpc",
       transformer: superjson,
       fetch(input, init) {
         // Para deployment estático, rejeitar todas as chamadas
