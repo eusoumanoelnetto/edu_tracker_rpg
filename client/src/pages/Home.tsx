@@ -5,15 +5,15 @@ import { CourseList } from "@/components/CourseList";
 import { AchievementsList } from "@/components/AchievementsList";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth } from "@/_core/hooks/useAuthFixed";
 import { useDemoData } from "@/contexts/DemoContext";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Home() {
-  const { user, loading, isAuthenticated, logout } = useAuth();
   const { isDemoMode, demoUser, demoCourses, demoAchievements } = useDemoData();
+  const { user, loading, isAuthenticated, logout } = useAuth();
   
   // Pré-carregar dados em paralelo (apenas em produção com servidor)
   const coursesQuery = trpc.courses.list.useQuery(undefined, { enabled: isAuthenticated && !isDemoMode });
@@ -83,7 +83,8 @@ export default function Home() {
     }
   };
 
-  if (loading) {
+  // Em modo demo, nunca mostrar loading
+  if (loading && !isDemoMode) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto">

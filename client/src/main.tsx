@@ -57,29 +57,10 @@ const trpcClient = trpc.createClient({
       url: isStaticDeployment ? "/__mock_api__" : "/api/trpc",
       transformer: superjson,
       fetch(input, init) {
-        // Para deployment estático, simular API com dados mock
+        // Para deployment estático, rejeitar todas as chamadas
         if (isStaticDeployment) {
-          return Promise.resolve(new Response(JSON.stringify({
-            success: true,
-            data: {
-              user: {
-                id: "demo-user",
-                name: "Demo User",
-                email: "demo@example.com",
-                avatar: "boy-1",
-                openId: "demo-openid"
-              },
-              courses: [],
-              achievements: [
-                { name: "Primeiro Login", description: "Bem-vindo ao RPG Edu Tracker!", icon: "🎉", unlocked: true },
-                { name: "Explorador", description: "Explorou todas as funcionalidades", icon: "🗺️", unlocked: true },
-                { name: "Estudante Dedicado", description: "Completou primeiro curso", icon: "📚", unlocked: false }
-              ]
-            }
-          }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-          }));
+          console.log('[tRPC] Demo mode - API calls disabled');
+          return Promise.reject(new Error('Demo mode: API calls disabled'));
         }
 
         // Get token from localStorage (for VS Code Simple Browser compatibility)
