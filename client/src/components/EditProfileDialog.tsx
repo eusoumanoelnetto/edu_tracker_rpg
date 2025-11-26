@@ -40,6 +40,9 @@ export function EditProfileDialog({
   const [selectedAvatar, setSelectedAvatar] = useState(currentAvatar || AVATAR_OPTIONS[0].src);
   const [showAvatarOptions, setShowAvatarOptions] = useState(false);
   
+  // Obter utils fora das callbacks
+  const utils = trpc.useUtils();
+  
   // Sincronizar com props quando abrir o diálogo ou props mudarem
   useEffect(() => {
     if (open) {
@@ -53,7 +56,7 @@ export function EditProfileDialog({
     onSuccess: () => {
       toast.success("Perfil atualizado com sucesso! 🎮");
       // Forçar atualização do cache local
-      trpc.useUtils().auth.me.setData(undefined, (old) => {
+      utils.auth.me.setData(undefined, (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -61,7 +64,7 @@ export function EditProfileDialog({
           avatar: selectedAvatar,
         };
       });
-      trpc.useUtils().auth.me.invalidate();
+      utils.auth.me.invalidate();
       onOpenChange(false);
     },
     onError: (error) => {
@@ -71,7 +74,7 @@ export function EditProfileDialog({
         toast.success("Perfil atualizado com sucesso! 🎮 (modo dev)");
         
         // Atualizar cache local mesmo sem banco
-        trpc.useUtils().auth.me.setData(undefined, (old) => {
+        utils.auth.me.setData(undefined, (old) => {
           if (!old) return old;
           return {
             ...old,
