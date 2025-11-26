@@ -8,9 +8,26 @@ interface Achievement {
   unlocked: boolean;
 }
 
+type DemoAchievement = {
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+};
+
+type DbAchievement = {
+  id: number;
+  userId: number;
+  title: string;
+  description: string | null;
+  icon: string | null;
+  unlockedAt: Date;
+  createdAt: Date;
+};
+
 interface BadgesCardProps {
-  achievements?: Achievement[];
-  isDemoMode?: boolean;
+  achievements?: DemoAchievement[] | DbAchievement[];
+  isDemoMode: boolean;
 }
 
 export function BadgesCard({ achievements: propAchievements, isDemoMode }: BadgesCardProps) {
@@ -27,7 +44,9 @@ export function BadgesCard({ achievements: propAchievements, isDemoMode }: Badge
   }
 
   const currentAchievements = isDemoMode ? propAchievements : achievements;
-  const unlockedBadges = currentAchievements?.filter(a => isDemoMode ? a.unlocked : a.unlockedAt) || [];
+  const unlockedBadges = currentAchievements?.filter(a => 
+    isDemoMode ? (a as DemoAchievement).unlocked : (a as DbAchievement).unlockedAt
+  ) || [];
   const totalBadges = currentAchievements?.length || 10;
 
   return (
@@ -42,7 +61,9 @@ export function BadgesCard({ achievements: propAchievements, isDemoMode }: Badge
       {/* Grid de Selos */}
       <div className="grid grid-cols-5 gap-2">
         {currentAchievements?.map((achievement, index) => {
-          const isUnlocked = isDemoMode ? achievement.unlocked : achievement.unlockedAt;
+          const isUnlocked = isDemoMode 
+            ? (achievement as DemoAchievement).unlocked 
+            : (achievement as DbAchievement).unlockedAt;
 
           return (
             <div
@@ -51,7 +72,11 @@ export function BadgesCard({ achievements: propAchievements, isDemoMode }: Badge
                 aspect-square arcade-card p-1 flex items-center justify-center
                 ${isUnlocked ? 'bg-accent/20' : 'bg-muted opacity-50'}
               `}
-              title={isUnlocked ? `${achievement.name}: ${achievement.description}` : 'Selo bloqueado'}
+              title={isUnlocked 
+                ? isDemoMode 
+                  ? `${(achievement as DemoAchievement).name}: ${(achievement as DemoAchievement).description}` 
+                  : `${(achievement as DbAchievement).title}: ${(achievement as DbAchievement).description}` 
+                : 'Selo bloqueado'}
             >
               {isUnlocked ? (
                 <span className="text-lg">{achievement.icon}</span>

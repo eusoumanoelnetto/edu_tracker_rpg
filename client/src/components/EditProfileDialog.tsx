@@ -18,7 +18,7 @@ interface EditProfileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   currentName: string;
-  currentAvatar?: string;
+  currentAvatar?: string | null;
 }
 
 const AVATAR_OPTIONS = [

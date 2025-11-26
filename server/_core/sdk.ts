@@ -286,6 +286,7 @@ class SDKServer {
         openId: session.openId,
         name: session.name || "Desenvolvedor",
         email: "dev@localhost",
+        avatar: null,
         loginMethod: "dev",
         role: "user",
         createdAt: new Date(),

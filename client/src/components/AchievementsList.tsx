@@ -10,8 +10,18 @@ interface DemoAchievement {
   unlocked: boolean;
 }
 
+type DbAchievement = {
+  id: number;
+  userId: number;
+  title: string;
+  description: string | null;
+  icon: string | null;
+  unlockedAt: Date;
+  createdAt: Date;
+};
+
 interface AchievementsListProps {
-  achievements?: DemoAchievement[];
+  achievements?: DemoAchievement[] | DbAchievement[];
   isDemoMode?: boolean;
 }
 

@@ -4,8 +4,8 @@ import { EditProfileDialog } from "./EditProfileDialog";
 import { Button } from "@/components/ui/button";
 
 interface CharacterHUDProps {
-  characterName?: string;
-  avatar?: string;
+  characterName: string;
+  avatar?: string | null;
 }
 
 export function CharacterHUD({ characterName = "Adventurer", avatar }: CharacterHUDProps) {

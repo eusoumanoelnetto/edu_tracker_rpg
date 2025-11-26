@@ -80,16 +80,42 @@ patches/
 - Acesse: https://eusoumanoelnetto.github.io/rpg_edu_tracker/
 
 ## 👨‍💻 Como rodar o projeto
-1. Instale as dependências:
-   ```sh
-   pnpm install
-   ```
-2. Configure o banco de dados MySQL (ou use modo dev)
-3. Inicie o servidor e o frontend:
-   ```sh
-   pnpm dev
-   ```
-4. Acesse via navegador ou browser interno do VS Code
+
+### Instalação Rápida
+```bash
+# 1. Instalar dependências
+pnpm install
+
+# 2. (Opcional) Configurar variáveis de ambiente
+# Copie .env.example para .env e configure se necessário
+cp .env.example .env
+
+# 3. Iniciar servidor de desenvolvimento
+pnpm dev              # Linux/Mac
+pnpm dev:win          # Windows
+
+# 4. Acesse http://localhost:3000
+```
+
+### Scripts Disponíveis
+- `pnpm dev` - Inicia servidor dev (Linux/Mac)
+- `pnpm dev:win` - Inicia servidor dev (Windows)
+- `pnpm build` - Build completo (client + server)
+- `pnpm build:client` - Build apenas do frontend
+- `pnpm check` - Valida tipos TypeScript
+- `pnpm test` - Executa testes
+- `pnpm format` - Formata código com Prettier
+
+### Requisitos
+- Node.js 20+
+- pnpm 9+
+- MySQL (opcional - modo dev usa cache)
+
+### Modo Demo
+O app roda automaticamente em modo demo (sem backend) quando:
+- Hospedado no GitHub Pages
+- Sem variáveis de ambiente configuradas
+- Sem banco de dados conectado
 
 ## 📢 Autor
 - [Manoel Netto](https://g.dev/eusoumanoelnetto)
