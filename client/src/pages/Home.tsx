@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { CharacterHUD } from "@/components/CharacterHUD";
+import { BadgesCard } from "@/components/BadgesCard";
 import { CourseList } from "@/components/CourseList";
 import { AchievementsList } from "@/components/AchievementsList";
 import { trpc } from "@/lib/trpc";
@@ -20,8 +21,20 @@ export default function Home() {
     title: "",
     description: "",
     category: "course",
-    totalHours: 10,
+    startDate: "",
+    endDate: "",
   });
+
+  // Calcular horas baseado na categoria
+  const getCategoryHours = (category: string) => {
+    const hoursMap: Record<string, number> = {
+      course: 45,
+      bootcamp: 50,
+      trail: 90,
+      project: 100,
+    };
+    return hoursMap[category] || 45;
+  };
 
   const createCourseMutation = trpc.courses.create.useMutation({
     onSuccess: () => {
@@ -40,8 +53,11 @@ export default function Home() {
     }
 
     try {
-      await createCourseMutation.mutateAsync(formData);
-      setFormData({ title: "", description: "", category: "course", totalHours: 10 });
+      await createCourseMutation.mutateAsync({
+        ...formData,
+        totalHours: getCategoryHours(formData.category),
+      });
+      setFormData({ title: "", description: "", category: "course", startDate: "", endDate: "" });
       setShowAddCourse(false);
       toast.success("Curso adicionado com sucesso! 🎮");
     } catch (error) {
@@ -143,11 +159,12 @@ export default function Home() {
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Character HUD - Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
             <CharacterHUD 
               characterName={user?.name || "Aventureiro"} 
               avatar={user?.avatar}
             />
+            <BadgesCard />
           </div>
 
           {/* Courses Section - Main */}
@@ -200,26 +217,48 @@ export default function Home() {
                     }
                     className="w-full p-2 border-2 border-foreground bg-background text-foreground text-xs font-bold"
                   >
-                    <option value="course">Curso</option>
-                    <option value="bootcamp">Bootcamp</option>
-                    <option value="trail">Trilha</option>
-                    <option value="project">Projeto</option>
+                    <option value="course">Curso (45h)</option>
+                    <option value="bootcamp">Bootcamp (50h)</option>
+                    <option value="trail">Trilha (90h)</option>
+                    <option value="project">Projeto (100h)</option>
                   </select>
                   
-                  <input
-                    type="number"
-                    min="1"
-                    max="1000"
-                    placeholder="Total de horas"
-                    value={formData.totalHours}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        totalHours: parseInt(e.target.value) || 10,
-                      })
-                    }
-                    className="w-full p-2 border-2 border-foreground bg-background text-foreground text-xs font-bold"
-                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] text-muted-foreground uppercase mb-1 font-bold">
+                        Data Início
+                      </label>
+                      <input
+                        type="date"
+                        value={formData.startDate}
+                        onChange={(e) =>
+                          setFormData({ ...formData, startDate: e.target.value })
+                        }
+                        className="w-full p-2 border-2 border-foreground bg-background text-foreground text-xs font-bold"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-muted-foreground uppercase mb-1 font-bold">
+                        Data Fim
+                      </label>
+                      <input
+                        type="date"
+                        value={formData.endDate}
+                        onChange={(e) =>
+                          setFormData({ ...formData, endDate: e.target.value })
+                        }
+                        className="w-full p-2 border-2 border-foreground bg-background text-foreground text-xs font-bold"
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="p-2 bg-muted border-2 border-muted-foreground/20">
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold">
+                      Total de Horas: <span className="text-foreground">{getCategoryHours(formData.category)}h</span>
+                    </p>
+                  </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -252,6 +291,18 @@ export default function Home() {
             Conquistas
           </h2>
           <AchievementsList />
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 text-center">
+          <a
+            href="https://g.dev/eusoumanoelnetto"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors uppercase font-bold"
+          >
+            Developed by @eusoumanoelnetto
+          </a>
         </div>
       </div>
     </div>
