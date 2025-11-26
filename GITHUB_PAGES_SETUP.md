@@ -4,21 +4,21 @@
 ✅ **Workflow configurado e funcionando perfeitamente**  
 ✅ **2 deploys executados com sucesso**  
 ✅ **Arquivos sendo enviados corretamente**  
-✅ **Base path configurado: `/rpg_edu_tracker/`**  
+✅ **Base path configurado: `/edu_tracker_rpg/`**  
 ✅ **Actions `configure-pages@v5` e `deploy-pages@v4` configuradas**  
 ❌ **GitHub Pages precisa ser HABILITADO MANUALMENTE** ⚠️
 
 ## 🚀 AÇÃO NECESSÁRIA: Habilitar GitHub Pages
 
 ### Passo Único e Final:
-1. **Acesse**: https://github.com/EuSouManoelNetto/rpg_edu_tracker/settings/pages
+1. **Acesse**: https://github.com/eusoumanoelnetto/edu_tracker_rpg/settings/pages
 2. **Em "Source"**: Selecione **"GitHub Actions"** 
 3. **Clique em "Save"**
 
 **PRONTO!** O próximo push fará o deploy automaticamente.
 
 ## 🎮 Após Ativação
-- **URL do Site**: https://eusoumanoelnetto.github.io/rpg_edu_tracker/
+- **URL do Site**: https://eusoumanoelnetto.github.io/edu_tracker_rpg/
 - **Modo Demo**: Ativado automaticamente (detecta `.github.io`)
 - **Funcionalidades**: Frontend completo com dados mockados
 
@@ -33,7 +33,7 @@
 1. **Workflow Run #10**: Deploy bem-sucedido ✅
 2. **Workflow Run #11**: Deploy com `configure-pages@v5` bem-sucedido ✅  
 3. **Build Local**: Arquivos gerados corretamente ✅
-4. **Base Path**: `/rpg_edu_tracker/` nos assets ✅
+4. **Base Path**: `/edu_tracker_rpg/` nos assets ✅
 
 ## ⚡ O Problema
 O GitHub Pages **não permite ativação via API/Actions**. É **obrigatório** ativar manualmente uma vez nas configurações do repositório.

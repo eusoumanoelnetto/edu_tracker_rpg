@@ -49,7 +49,7 @@ queryClient.getMutationCache().subscribe(event => {
 // Detecta se está rodando no GitHub Pages (sem servidor backend)
 const isStaticDeployment = window.location.hostname.includes('github.io') || 
                           window.location.hostname.includes('pages.dev') ||
-                          window.location.pathname.includes('/rpg_edu_tracker/');
+                          window.location.pathname.includes('/edu_tracker_rpg/');
 
 const trpcClient = trpc.createClient({
   links: [

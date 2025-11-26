@@ -9,13 +9,13 @@
       (function() {
         var l = window.location;
         // Remove /rpg_edu_tracker/ do path e preserva em query param
-        var route = l.pathname.replace('/rpg_edu_tracker', '');
+        var route = l.pathname.replace('/edu_tracker_rpg', '');
         if (route === '' || route === '/') {
           // Se já está na raiz, apenas redireciona para index
-          l.replace('/rpg_edu_tracker/');
+          l.replace('/edu_tracker_rpg/');
         } else {
           // Redireciona preservando a rota em ?p=
-          l.replace('/rpg_edu_tracker/?p=' + encodeURIComponent(route + l.search + l.hash));
+          l.replace('/edu_tracker_rpg/?p=' + encodeURIComponent(route + l.search + l.hash));
         }
       })();
     </script>

@@ -35,7 +35,7 @@ interface DemoProviderProps {
 export function DemoProvider({ children }: DemoProviderProps) {
   const isDemoMode = window.location.hostname.includes('github.io') || 
                      window.location.hostname.includes('pages.dev') ||
-                     window.location.pathname.includes('/rpg_edu_tracker/');
+                     window.location.pathname.includes('/edu_tracker_rpg/');
 
   const demoData: DemoContextType = {
     isDemoMode,

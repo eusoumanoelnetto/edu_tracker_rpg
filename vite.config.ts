@@ -14,7 +14,7 @@ export default defineConfig({
   // Base path para produção no GitHub Pages
   // Quando a variável de ambiente GITHUB_PAGES estiver definida (no workflow),
   // usamos o nome do repositório como base. Em dev permanece "/".
-  base: process.env.GITHUB_PAGES ? "/rpg_edu_tracker/" : "/",
+  base: process.env.GITHUB_PAGES ? "/edu_tracker_rpg/" : "/",
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
