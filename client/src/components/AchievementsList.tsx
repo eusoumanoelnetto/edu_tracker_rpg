@@ -1,8 +1,9 @@
 import { trpc } from "@/lib/trpc";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Achievement as DBAchievement } from "@shared/types";
 
-interface Achievement {
+interface DemoAchievement {
   name: string;
   description: string;
   icon: string;
@@ -10,7 +11,7 @@ interface Achievement {
 }
 
 interface AchievementsListProps {
-  achievements?: Achievement[];
+  achievements?: DemoAchievement[];
   isDemoMode?: boolean;
 }
 
@@ -38,35 +39,46 @@ export function AchievementsList({ achievements: propAchievements, isDemoMode }:
   }
 
   const currentAchievements = isDemoMode ? propAchievements : achievements;
-  const unlockedAchievements = currentAchievements?.filter(a => isDemoMode ? a.unlocked : a.unlockedAt) || [];
+  const unlockedAchievements = currentAchievements?.filter(a => {
+    if (isDemoMode) {
+      return (a as DemoAchievement).unlocked;
+    }
+    return (a as DBAchievement).unlockedAt;
+  }) || [];
 
   return (
     <div className="arcade-card">
       {unlockedAchievements && unlockedAchievements.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {unlockedAchievements.map((achievement, index) => (
-            <div
-              key={isDemoMode ? index : achievement.id}
-              className="arcade-card bg-muted text-center hover:bg-accent transition-colors p-3"
-            >
-              <div className="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-2xl">
-                {isDemoMode ? achievement.icon : achievement.icon || "🏆"}
+          {unlockedAchievements.map((achievement, index) => {
+            const isDemo = isDemoMode && 'unlocked' in achievement;
+            const demoAch = achievement as DemoAchievement;
+            const dbAch = achievement as DBAchievement;
+            
+            return (
+              <div
+                key={isDemo ? index : dbAch.id}
+                className="arcade-card bg-muted text-center hover:bg-accent transition-colors p-3"
+              >
+                <div className="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-2xl">
+                  {isDemo ? demoAch.icon : dbAch.icon || "🏆"}
+                </div>
+                <p className="text-xs font-bold text-foreground mb-1 uppercase">
+                  {isDemo ? demoAch.name : dbAch.title}
+                </p>
+                {achievement.description && (
+                  <p className="text-xs text-muted-foreground">
+                    {achievement.description}
+                  </p>
+                )}
+                {!isDemo && (
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {new Date(dbAch.unlockedAt).toLocaleDateString("pt-BR")}
+                  </p>
+                )}
               </div>
-              <p className="text-xs font-bold text-foreground mb-1 uppercase">
-                {isDemoMode ? achievement.name : achievement.title}
-              </p>
-              {achievement.description && (
-                <p className="text-xs text-muted-foreground">
-                  {achievement.description}
-                </p>
-              )}
-              {!isDemoMode && (
-                <p className="text-xs text-muted-foreground mt-2">
-                  {new Date(achievement.unlockedAt).toLocaleDateString("pt-BR")}
-                </p>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="text-center py-8 text-muted-foreground">
