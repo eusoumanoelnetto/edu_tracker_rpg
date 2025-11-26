@@ -77,17 +77,24 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   }
 }
 
+// Cache em memória para dados do usuário em modo dev
+const devUserCache = new Map<string, { name: string; avatar?: string }>();
+
 export async function getUserByOpenId(openId: string) {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot get user: database not available, using mock user for development");
+    
+    // Buscar dados atualizados do cache em memória
+    const cachedData = devUserCache.get(openId);
+    
     // Retorna usuário mock para desenvolvimento
     return {
       id: 1,
       openId: openId,
-      name: "Desenvolvedor",
+      name: cachedData?.name || "Desenvolvedor",
       email: "dev@example.com",
-      avatar: "https://api.dicebear.com/7.x/pixel-art/png?seed=adventurer&size=64",
+      avatar: cachedData?.avatar || "/boy-1.png",
       loginMethod: "dev",
       role: "admin" as const,
       lastSignedIn: new Date(),
@@ -101,13 +108,17 @@ export async function getUserByOpenId(openId: string) {
     return result.length > 0 ? result[0] : undefined;
   } catch (error) {
     console.error("[Database] Failed to get user:", error);
+    
+    // Buscar dados atualizados do cache em memória
+    const cachedData = devUserCache.get(openId);
+    
     // Retorna usuário mock em caso de erro
     return {
       id: 1,
       openId: openId,
-      name: "Desenvolvedor",
+      name: cachedData?.name || "Desenvolvedor",
       email: "dev@example.com", 
-      avatar: "https://api.dicebear.com/7.x/pixel-art/png?seed=adventurer&size=64",
+      avatar: cachedData?.avatar || "/boy-1.png",
       loginMethod: "dev",
       role: "admin" as const,
       lastSignedIn: new Date(),
@@ -121,8 +132,14 @@ export async function updateUser(userId: number, updates: Partial<{ name: string
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot update user: database not available, using in-memory storage");
-    // Para desenvolvimento, vamos simular sucesso quando banco não está disponível
-    console.log("[Database] Would update user", userId, "with:", updates);
+    // Em modo dev, armazenar em cache de memória
+    // Usar um ID fixo para o usuário dev
+    const devOpenId = "dev_user_123";
+    devUserCache.set(devOpenId, {
+      name: updates.name || "Desenvolvedor",
+      avatar: updates.avatar,
+    });
+    console.log("[Database] Stored in dev cache for user", userId, ":", updates);
     return;
   }
 
@@ -131,8 +148,13 @@ export async function updateUser(userId: number, updates: Partial<{ name: string
     console.log("[Database] Successfully updated user", userId, "with:", updates);
   } catch (error) {
     console.error("[Database] Failed to update user:", error);
-    // Não lançar erro para permitir que funcione em dev sem banco
-    console.warn("[Database] Update failed, continuing in development mode");
+    // Salvar em cache mesmo com erro
+    const devOpenId = "dev_user_123";
+    devUserCache.set(devOpenId, {
+      name: updates.name || "Desenvolvedor",
+      avatar: updates.avatar,
+    });
+    console.warn("[Database] Update failed, stored in dev cache:", updates);
   }
 }
 

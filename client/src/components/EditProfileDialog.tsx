@@ -55,13 +55,23 @@ export function EditProfileDialog({
   const updateProfileMutation = trpc.auth.updateProfile.useMutation({
     onSuccess: () => {
       toast.success("Perfil atualizado com sucesso! 🎮");
+      
+      const updatedData = {
+        name: name.trim(),
+        avatar: selectedAvatar,
+      };
+      
+      // Salvar no localStorage para persistir em modo dev
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('dev_profile_override', JSON.stringify(updatedData));
+      }
+      
       // Forçar atualização do cache local
       utils.auth.me.setData(undefined, (old) => {
         if (!old) return old;
         return {
           ...old,
-          name: name.trim(),
-          avatar: selectedAvatar,
+          ...updatedData,
         };
       });
       utils.auth.me.invalidate();
@@ -73,13 +83,22 @@ export function EditProfileDialog({
         console.log("[Dev Mode] Simulating profile update success");
         toast.success("Perfil atualizado com sucesso! 🎮 (modo dev)");
         
+        const updatedData = {
+          name: name.trim(),
+          avatar: selectedAvatar,
+        };
+        
+        // Salvar no localStorage para persistir em modo dev
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('dev_profile_override', JSON.stringify(updatedData));
+        }
+        
         // Atualizar cache local mesmo sem banco
         utils.auth.me.setData(undefined, (old) => {
           if (!old) return old;
           return {
             ...old,
-            name: name.trim(),
-            avatar: selectedAvatar,
+            ...updatedData,
           };
         });
         onOpenChange(false);
