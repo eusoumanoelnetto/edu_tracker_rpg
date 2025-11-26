@@ -2,38 +2,28 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>RPG Edu Tracker - Redirecionando...</title>
+    <title>RPG Edu Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
-      // SPA fallback para GitHub Pages
+      // Redireciona imediatamente para index.html com a rota preservada
       (function() {
-        var pathSegmentsToKeep = 1; // para /rpg_edu_tracker/
         var l = window.location;
-        
-        // Detecta se estamos no GitHub Pages
-        if (l.host.includes('github.io')) {
-          var path = l.pathname.split('/').slice(0, pathSegmentsToKeep + 1).join('/');
-          var route = l.pathname.slice(path.length);
-          
-          if (route) {
-            // Redireciona para index.html com a rota preservada
-            l.replace(
-              path + '/?p=' + encodeURIComponent(route + l.search + l.hash)
-            );
-          } else {
-            // Se não há rota, vai direto para index
-            l.replace(path + '/');
-          }
+        // Remove /rpg_edu_tracker/ do path e preserva em query param
+        var route = l.pathname.replace('/rpg_edu_tracker', '');
+        if (route === '' || route === '/') {
+          // Se já está na raiz, apenas redireciona para index
+          l.replace('/rpg_edu_tracker/');
+        } else {
+          // Redireciona preservando a rota em ?p=
+          l.replace('/rpg_edu_tracker/?p=' + encodeURIComponent(route + l.search + l.hash));
         }
       })();
     </script>
   </head>
   <body>
-    <div style="font-family: system-ui; text-align: center; padding: 40px;">
-      <h1>Redirecionando...</h1>
-      <noscript>
-        <p>Por favor, habilite JavaScript para usar esta aplicação.</p>
-      </noscript>
+    <div style="font-family: -apple-system, system-ui, sans-serif; text-align: center; padding: 60px 20px; color: #333;">
+      <h1 style="font-size: 24px; margin-bottom: 10px;">Carregando...</h1>
+      <p style="color: #666; font-size: 14px;">Redirecionando para RPG Edu Tracker</p>
     </div>
   </body>
 </html>
