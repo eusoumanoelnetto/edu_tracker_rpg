@@ -1,6 +1,8 @@
 # ![Banner do Projeto](assets/banner.png)
 # RPG Edu Tracker
 
+🚀 **[Ver Demo ao Vivo](https://eusoumanoelnetto.github.io/rpg_edu_tracker/)**
+
 RPG Edu Tracker é um projeto educacional gamificado que utiliza elementos de RPG para engajar alunos e acompanhar o progresso em cursos, conquistas e atividades. Este repositório serve como modelo para projetos modernos de desenvolvimento web fullstack, destacando boas práticas, tecnologias atuais e integração entre frontend e backend.
 
 ## 🚀 Visão Geral
