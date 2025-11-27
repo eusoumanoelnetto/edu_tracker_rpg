@@ -14,7 +14,8 @@ export default defineConfig({
   // Base path para produção no GitHub Pages
   // Quando a variável de ambiente GITHUB_PAGES estiver definida (no workflow),
   // usamos o nome do repositório como base. Em dev permanece "/".
-  base: process.env.GITHUB_PAGES ? "/edu_tracker_rpg/" : "/",
+  // Força base path correto para produção e build local
+  base: "/edu_tracker_rpg/",
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
@@ -28,6 +29,14 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    assetsDir: "assets",
+    rollupOptions: {
+      output: {
+        entryFileNames: "assets/[name]-[hash].js",
+        chunkFileNames: "assets/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash][extname]"
+      }
+    }
   },
   server: {
     host: true,
